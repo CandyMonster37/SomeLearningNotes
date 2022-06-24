@@ -24,6 +24,8 @@
     - [对okhttp3访问方式进行封装](#对okhttp3访问方式进行封装)
   - [服务](#服务)
     - [Android多线程编程](#android多线程编程)
+      - [构造线程的几种方法](#构造线程的几种方法)
+    - [更新UI](#更新ui)
 ## 通知
 ### 发送通知
 Android 8.0以上的时候需要先声明channel才能注册通知事件，因此若要发送一个通知事件，基本写法应该为：<br>
@@ -953,6 +955,42 @@ HttpUtil.okHttpPost(url, requestBody, new okhttp3.Callback() {
 ## 服务
 需要在服务的内部创建子线程并执行具体的任务。<br>
 ### Android多线程编程
+#### 构造线程的几种方法
+1. 新建一个类继承自Thread，重写父类的`run()`方法：
+   ```
+   class MyThread extends Thread {
+       @Override
+       public void run() {
+           // 处理事务的具体逻辑
+       }
+   }
+   ```
+   调用时：`new MyThread().start();`。这种方式耦合度较高。
+2. 用实现Runnable接口的方式定义线程：
+   ```
+   class MyThread implements Runnable {
+       @Override
+       public void run() {
+           // 处理事务的具体逻辑
+       }
+   }
+   ```
+   启动方式为：
+   ```
+   MyThread myThread = new MyThread();
+   new Thread(myThread).start();
+   ```
+3. 最常见的方式：匿名类
+   ```
+   new Thread(new Runnable() {
+       @Override
+       public void run() {
+           // 处理事务的具体逻辑
+       }
+   }).start();
+   ```
+### 更新UI
+Android不允许在子线程中进行UI操作，需要通过异步消息处理的机制更新UI。
 
 
 <br>
